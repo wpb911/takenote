@@ -21,7 +21,7 @@ const PORT = (process.env.PORT || 3000);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Star Wars Characters (DATA)
+// note test (DATA)
 // =============================================================
 var notes = [
   {
@@ -110,73 +110,33 @@ app.post("/api/notes", function(req, res) {
   //get new note information
   let newNote = JSON.stringify(req.body);
   
-  //get existing notes from db.json file and add req.body and save updates back to db.json file
+  //retrieve existing notes from db.json file and add req.body(new note) and save back to db.json file
   fs.readFile(path.join(DB_DIR, "dbtest.json"),'utf8', (err, notes) => {
     
+    //convert file data to an array 
     const notesArray = notes.split(" ");
     if (err) throw err;
-    console.log(`Original Note Array from file : ${notesArray}`);
+    console.log(`Original note string from file converted to Array : ${notesArray}`);
     
-    //add new note from req.body 
+    //add new note from req.body to array
     const countNotes = notesArray.push(newNote);    
     console.log(`Updated Note Array to save to file : ${notesArray}`);
     console.log(`Total number of notes : ${countNotes}`);
 
-    let notesString = notesArray.join("");
-    console.log(`Parsed notes : ${countNotes}`);
+    //convert array to string for saving to file 
+    let notesString = notesArray.join(" ");
+    console.log(`Parsed notes : ${notesString}`);
 
     //save updates back to db.json file
-    fs.writeFile(path.join(DB_DIR, "dbtest.json"), notesString, 'utf8', (err) => {
+    fs.writeFile(path.join(DB_DIR, "dbtest.json"), notesString , 'utf8', (err) => {
       if (err) throw err;
       console.log('The file has been saved!');
     });
     //send updated notes back as json response
-    return res.json(notesArray);
+    return res.json(notesString);
   });
-  // req.body hosts is equal to the JSON post sent from the user
-  // This works because of our body parsing middleware
-  
-  //console.log(`New Note Info for POST: ${JSON.stringify(newNote)}`);
-  //let notesArray = JSON.stringify(newNote);
-  //console.log(`New Note Array for POST: ${notesArray}`);
-
-  
-
-  
-  
-  // res.json(notesArray);
-  //  res.json(notesArray);
-
-  // Using a RegEx Pattern to remove spaces from newCharacter
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  //newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
-  // fs.readFile(path.join(DB_DIR, "db.json"),'utf8', (err, notes) => {
-
-  //   if (err) throw err;
-  //   let notesArray = [];
-
-  //   notesArray = JSON.stringify(newNote);
     
-  //   const count = notesArray.push(newNote);
-
-  //   console.log(notesArray);
-  //   return res.json(notesArray);
-    
-  // });
   
-
-  
-
-  //will need to write to the db also 
-  //fs.writeFile(file, data[, options], callback)
-  //fs.writeFile('db.json', 'message.txt', 'utf8', callback);
-
-  // fs.writeFile(path.join(DB_DIR, "db.json"), notesArray, 'utf8', (err) => {
-  //   if (err) throw err;
-  //   console.log('The file has been saved!');
-  // });
-
-  // res.json(notesArray);
   
 });
 
