@@ -103,29 +103,42 @@ app.get("/api/notes", function(req, res) {
 // POST `/api/notes` - Should receive a new note to save on the request body, 
 // add it to the `db.json` file, and then return the new note to the client.
 app.post("/api/notes", function(req, res) {
-  // const animals = ['pigs', 'goats', 'sheep'];
-  // const count = animals.push('cows');
-  // console.log(animals);
-
+  
   //get new note information
-  let newNote = JSON.stringify(req.body);
+  let newNote = req.body;
+  //let strnewNote = JSON.stringify(req.body);
+  //let parnewNote = JSON.parse(req.body);
+  console.log(`Original request body : ${newNote}`);
+  //console.log(`stringified request body  : ${strnewNote}`);
+  //console.log(`parsed request body  : ${parnewNote}`);
+    
   
   //retrieve existing notes from db.json file and add req.body(new note) and save back to db.json file
   fs.readFile(path.join(DB_DIR, "dbtest.json"),'utf8', (err, notes) => {
+    //console.log(`Original note string from file (NOT parsed) : ${notes}`);
+    console.log(`Original note string from file (parsed) : ${JSON.parse(notes)}`);
     
+
     //convert file data to an array 
-    const notesArray = notes.split(" ");
+    const notesArray = JSON.parse(notes);
+    console.log(`Original note string saved to parsed array : ${notesArray}`);
+    //const parsenotesArray = JSON.parse(notes);
+    //console.log(`Original note string saved to parsed array : ${parsenotesArray}`);
     if (err) throw err;
-    console.log(`Original note string from file converted to Array : ${notesArray}`);
+    //console.log(`Original note string from file converted to Array : ${notesArray}`);
     
     //add new note from req.body to array
-    const countNotes = notesArray.push(newNote);    
+    const countNotes = notesArray.push(newNote);   
+    //const countParse = parsenotesArray.push(strnewNote);  
     console.log(`Updated Note Array to save to file : ${notesArray}`);
+    //console.log(`Updated Note Array to save to file : ${parsenotesArray}`);
     console.log(`Total number of notes : ${countNotes}`);
+    //console.log(`Total number of parsenotes : ${countParse}`);
 
     //convert array to string for saving to file 
-    let notesString = notesArray.join(" ");
-    console.log(`Parsed notes : ${notesString}`);
+    let notesString = JSON.stringify(notesArray);
+    
+     console.log(`Stringified notes : ${notesString}`);
 
     //save updates back to db.json file
     fs.writeFile(path.join(DB_DIR, "dbtest.json"), notesString , 'utf8', (err) => {
@@ -133,29 +146,40 @@ app.post("/api/notes", function(req, res) {
       console.log('The file has been saved!');
     });
     //send updated notes back as json response
-    return res.json(notesString);
+    return res.json(notesArray);
   });
     
   
   
 });
 
-// Delete a note - takes in JSON input
-app.delete("/api/notes", function(req, res) {
-    // req.body hosts is equal to the JSON post sent from the user
-  // This works because of our body parsing middleware
-  var newNote = req.body;
+//DELETE `/api/notes/:id` - Should receive a query parameter containing the id of a note to delete. 
+//This means you'll need to find a way to give each note a unique `id` when it's saved. 
+//In order to delete a note, you'll need to read all notes from the `db.json` file, remove 
+//the note with the given `id` property, and then rewrite the notes to the `db.json` file.
 
-  // Using a RegEx Pattern to remove spaces from newCharacter
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  //newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
+app.delete("/api/notes:id", function(req, res) {
+  //retrieve the file from storage
+  fs.readFile(path.join(DB_DIR, "dbtest.json"),'utf8', (err, notes) => {
+    
+    //convert file data to an array 
+    const notesArray = notes.split(" ");
+    if (err) throw err;
+    console.log(`Original note string from file converted to Array : ${notesArray}`);
+    
+    //find note to delete and send it as a response  
+    var id = req.params.id;
+    
+    for (var i = 0; i < notesArray.length; i++) {
+        if (id === notesArray[i].id) {
+          return res.json(notesArray[i]);
+        }
+    }
 
-  console.log(newNote);
 
-  notes.push(newNote);
+  });
   
-  //will need to write to the db also 
-  res.json(newNote);
+  
 });
 
 // Starts the server to begin listening
