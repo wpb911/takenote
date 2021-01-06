@@ -71,73 +71,37 @@ app.get("/api/notes", function(req, res) {
   });
 });
 
-
-
-// app.get("/api/notes", function(req, res) {
-//   fs.readFile(path.join(DB_DIR, "db.json"), (err, notes) => {
-//     if (err) throw err;
-//     console.log(notes);
-//     //return res.json(notes);
-//   });
-
-
-  //res.sendFile(path.join(DB_DIR, "db.json"));
-  //return res.json(notes);
-//});
-
-// Displays a single character, or returns false
-// app.get("/api/characters/:character", function(req, res) {
-//   var chosen = req.params.character;
-
-//   console.log(chosen);
-
-//   for (var i = 0; i < characters.length; i++) {
-//     if (chosen === characters[i].routeName) {
-//       return res.json(characters[i]);
-//     }
-//   }
-
-//   return res.json(false);
-// });
-
+//post route 
 // POST `/api/notes` - Should receive a new note to save on the request body, 
 // add it to the `db.json` file, and then return the new note to the client.
 app.post("/api/notes", function(req, res) {
   
   //get new note information
   let newNote = req.body;
-  //let strnewNote = JSON.stringify(req.body);
-  //let parnewNote = JSON.parse(req.body);
   console.log(`Original request body : ${newNote}`);
-  //console.log(`stringified request body  : ${strnewNote}`);
-  //console.log(`parsed request body  : ${parnewNote}`);
     
-  
   //retrieve existing notes from db.json file and add req.body(new note) and save back to db.json file
   fs.readFile(path.join(DB_DIR, "dbtest.json"),'utf8', (err, notes) => {
-    //console.log(`Original note string from file (NOT parsed) : ${notes}`);
+
     console.log(`Original note string from file (parsed) : ${JSON.parse(notes)}`);
     
-
     //convert file data to an array 
     const notesArray = JSON.parse(notes);
     console.log(`Original note string saved to parsed array : ${notesArray}`);
-    //const parsenotesArray = JSON.parse(notes);
-    //console.log(`Original note string saved to parsed array : ${parsenotesArray}`);
-    if (err) throw err;
-    //console.log(`Original note string from file converted to Array : ${notesArray}`);
+    
+    if (err) throw err;   
     
     //add new note from req.body to array
     const countNotes = notesArray.push(newNote);   
-    //const countParse = parsenotesArray.push(strnewNote);  
+     
     console.log(`Updated Note Array to save to file : ${notesArray}`);
-    //console.log(`Updated Note Array to save to file : ${parsenotesArray}`);
-    console.log(`Total number of notes : ${countNotes}`);
-    //console.log(`Total number of parsenotes : ${countParse}`);
-
-    //convert array to string for saving to file 
-    let notesString = JSON.stringify(notesArray);
     
+    console.log(`Total number of notes : ${countNotes}`);
+    
+
+    //convert array to string for saving to file
+    // JSON.stringify Array object to string 
+    let notesString = JSON.stringify(notesArray);    
      console.log(`Stringified notes : ${notesString}`);
 
     //save updates back to db.json file
