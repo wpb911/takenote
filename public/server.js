@@ -141,8 +141,8 @@ app.delete("/api/notes/:id", function(req, res) {
 
     if (err) throw err;
 
-    let saveArray = [{}];
-    let deleteArray = [{}];
+    let saveArray = [];
+    let deleteArray = [];
     //convert file data to an array 
     const notesArray = JSON.parse(notes);
         
@@ -151,20 +151,23 @@ app.delete("/api/notes/:id", function(req, res) {
     console.log(`params id = ${req.params.id}`);
     
     //create delete Array and 
-    notesArray.forEach(element => {
+    notesArray.forEach( (element, index) => {
       //console.log(element);
       console.log(`element ID: ${element.id} ID: ${id}`);
       if (parseInt(element.id) === parseInt(id)) {
-        deleteArray[element] = notesArray[element];
+        deleteArray.push(element);
         console.log("found it");
       } else {
-        saveArray[element] = notesArray[element];
+        saveArray.push(element);
         console.log("NOT found");
       }
     }) 
+    console.log(`Save Array: ${JSON.stringify(saveArray)}`); 
 
-      //ID renumber algorithm
-      //add unique ids to the array before saving 
+    console.log(`Delete Array: ${JSON.stringify(deleteArray)}`); 
+
+    //ID renumber algorithm
+    //add unique ids to the array before saving 
     let i = 0;
     saveArray.forEach(element => {
               
