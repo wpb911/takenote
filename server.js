@@ -5,8 +5,9 @@ const util = require('util');
 const path = require("path");
 const fs = require("fs");
 
-const DB_DIR = path.resolve(__dirname, "db");
+const DB_DIR = path.resolve(__dirname, "public/db");
 const dbPath = path.join(DB_DIR, "db.json");
+
 console.log(__dirname);
 //promisify the file object for Async operation
 const writeFileAsync = util.promisify(fs.writeFile);
