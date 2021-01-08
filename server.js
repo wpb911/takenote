@@ -67,6 +67,11 @@ app.get("/api/notes", function (req, res) {
 });
 
 // Displays index.html file
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
+// Displays index.html file
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
