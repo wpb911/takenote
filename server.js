@@ -107,7 +107,7 @@ app.post("/api/notes", function (req, res) {
     notesArray.forEach((element, index) => {
 
       console.log(`Before element ID: ${element.id}`);
-      element.id = index;
+      element.id = ++index;
       console.log(`After element ID: ${element.id}`);
 
     })
@@ -172,7 +172,7 @@ app.delete("/api/notes/:id", function (req, res) {
     saveArray.forEach((element, index) => {
 
       console.log(`Before element ID: ${element.id}`);
-      element.id = index;
+      element.id = ++index;
       console.log(`After element ID: ${element.id}`);
 
     })
